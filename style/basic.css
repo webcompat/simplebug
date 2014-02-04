@@ -1,0 +1,49 @@
+/* Very basic style for the simplified Bugs */
+
+body {
+	background-color: rgb(246, 246, 246);
+	font-family: "Helvetica Neue", Helvetica, sans-serif;
+}
+
+article {
+	margin: 1em;
+}
+
+section {
+	background-color: rgb(255, 255, 255);
+	padding: 2em 1em;
+	margin: 1em 0;
+}
+
+/* Description */
+#description {
+	border-top: 10px solid rgb(38, 140, 192);
+	background-size: 2em;
+	background-image: url('../images/description.svg');
+	background-position: 10px 10px;
+	background-repeat: no-repeat;
+}
+/* Fix */
+#suggested-fix {
+	background-size: 2em;
+	background-image: url('../images/fixit.svg');
+	background-position: 10px 10px;
+	background-repeat: no-repeat;
+}
+/* Information */
+#information {
+	background-size: 3em;
+	background-image: url('../images/more-info.svg');
+	background-position: 3px 10px;
+	background-repeat: no-repeat;
+}
+
+/* rules for bigger screens */
+@media only screen and (min-width : 768px) {
+	body {
+		background-color: rgb(200, 200, 200);
+	}
+	article {
+		width: 40em;
+	}
+}
