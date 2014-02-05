@@ -75,9 +75,11 @@
       for (var i = comments.length - 1; i > 0; i--) {
         if (comments[i].tags && comments[i].tags.indexOf(COOLGUYTAG) != -1) {
           render(comments[i].text)
-          break;
+          return;
         }
       }
+      // This bug needs some work before it's useful.
+      render("[needs-suggestedfix]");
     }
     else {
       render(comments);
