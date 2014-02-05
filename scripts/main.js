@@ -71,7 +71,8 @@
     };
 
     if (Array.isArray(comments)) {
-      for (var i = 0; i < comments.length; i++) {
+      // Loop from the bottom comment to the top, picking the "oldest" tag
+      for (var i = comments.length - 1; i > 0; i--) {
         if (comments[i].tags && comments[i].tags.indexOf(COOLGUYTAG) != -1) {
           render(comments[i].text)
           break;
