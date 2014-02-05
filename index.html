@@ -19,14 +19,8 @@ consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
 cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
 proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 </section>
-<section id="description">
-<pre>
-<pre>
-</section>
-<section id="suggested-fix">
-<pre>
-</pre>
-</section>
+<section id="description"></section>
+<section id="suggested-fix"></section>
 
 <section id="information" title="more information">
 <p id="bug-link"></section>
@@ -45,7 +39,7 @@ proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
   }
 
   function getDescription(text) {
-    var tmpl = ["<p>", text, "</p>"];
+    var tmpl = ["<p><pre>", text, "</pre></p>"];
     var desc = document.getElementById("description");
     desc.innerHTML = tmpl.join("");
   }
@@ -55,7 +49,7 @@ proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 
     for (var i = 0; i < comments.length; i++) {
       if (comments[i].tags && comments[i].tags.indexOf(COOLGUYTAG) != -1) {
-        tmpl = ["<p>", comments[i].text, "</p>"];
+        tmpl = ["<p><pre>", comments[i].text, "</pre></p>"];
         fix = document.getElementById("suggested-fix");
         fix.innerHTML = tmpl.join("");
         break;
