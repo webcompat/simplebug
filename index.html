@@ -1,26 +1,38 @@
 <!DOCTYPE html>
 <title>simplebug</title>
-<h2>Description</h2>
-<p id="description"><pre>
-Hi, 
+<meta charset="utf-8">
+<link rel="stylesheet" href="style/basic.css">
 
-When uploading a photo in facebook status
-*Choose Photo from Gallery 
-*In status only photo (editing mode)
+<header class="general">
+	
+</header>
+<article>
+<header id="bugxxxxxx">
+	
+</header>
+<section id="basic">
+<!-- Basic Intro Boilerplate -->
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+</section>
+<section id="description">
+<pre>
+<pre>
+</section>
+<section id="suggested-fix">
+<pre>
+</pre>
+</section>
 
-After upload, the same photo uploaded twice.
-</pre></p>
-<h2>Suggested Fix</h2>
-<p id="suggested-fix"><pre>
-this was considered desirable behaviour back in 2004: bug 197294.. I guess it still is (though I CC Boris in case he wants to comment). The recommended fix is to simply set .value='' on the cloned input before adding it to the DOM. Code:
+<section id="information" title="more information">
+<p id="bug-link">You can leave a comment on the bug <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=953388">953388</a>.</p>
+</section>
+</article>
 
-    i.prototype.cloneDOMNode = function() {
-        "use strict";
-        var j = this.$MPhotoUploadFileInput0;
-        this.$MPhotoUploadFileInput0 = j.cloneNode(true);
-        g.replace(j, this.$MPhotoUploadFileInput0);
-
-as seen in https://fbstatic-a.akamaihd.net/rsrc.php/v2/yW/r/fyE3nmvODl4.js
-</pre></p>
-<h2>More information</h2>
-<p id="bug-link">Comment on the bug here <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=953388">953388</a>.</p>
+<footer>
+	<p>Blah footer</p>
+</footer>
