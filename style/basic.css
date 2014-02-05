@@ -15,6 +15,10 @@ section {
 	margin: 1em 0;
 }
 
+pre {
+	white-space: pre-wrap;
+}
+
 /* Description */
 #description {
 	border-top: 10px solid rgb(38, 140, 192);
