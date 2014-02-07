@@ -1,7 +1,7 @@
 (function(){
   var hasWhiteboard = false;
   var BUGID = location.search.match(/id=(\d+)/) ? RegExp.$1 : null;
-  var COOLGUYTAG = "suggestedfix";
+  var FIXTAG = "suggestedfix";
   var DESCRIPTIONS = {
     "serversniff": "This website is using server side user agent detection to determine if a user is browsing using a desktop or mobile client. Unfortunately the site is not properly detecting the user agent string for mobile Firefox browsers. This is causing Firefox mobile browsers to be redirected to the desktop version of the website rather than mobile.",
     "clientsniff": "This website is using client side user agent detection to determine if a user is browsing using a desktop or mobile client. Unfortunately the site is not properly detecting the user agent string for mobile Firefox browsers. This is causing Firefox mobile browsers to be redirected to the desktop version of the website rather than mobile." 
@@ -83,7 +83,7 @@
     if (Array.isArray(comments)) {
       // Loop from the bottom comment to the top, picking the "oldest" tag
       for (var i = comments.length - 1; i > 0; i--) {
-        if (comments[i].tags && comments[i].tags.indexOf(COOLGUYTAG) != -1) {
+        if (comments[i].tags && comments[i].tags.indexOf(FIXTAG) != -1) {
           addPreText("suggested-fix", comments[i].text);
           return;
         }
