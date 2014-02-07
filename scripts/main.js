@@ -20,13 +20,21 @@
     }
   }
 
+  function addPreText(id, text) {
+    var pre = document.createElement("pre");
+    var desc = document.getElementById(id);
+    var text = document.createTextNode(text);
+    desc.innerHTML = "";
+    pre.appendChild(text);
+    desc.appendChild(pre);
+  }
+
   function getDescription(comments) {
     var text = Array.isArray(comments) ? comments[0].raw_text : comments;
     if (text.trim() === "") {
       getWhiteboard();
     } else {
-      var desc = document.getElementById("description");
-      desc.innerHTML = tmpl.join("");
+      addPreText("description", text);
       getSuggestedFix(comments);
     }
   }
@@ -76,12 +84,12 @@
       // Loop from the bottom comment to the top, picking the "oldest" tag
       for (var i = comments.length - 1; i > 0; i--) {
         if (comments[i].tags && comments[i].tags.indexOf(COOLGUYTAG) != -1) {
-          render(comments[i].text)
+          addPreText("suggested-fix", comments[i].text);
           return;
         }
       }
       // This bug needs some work before it's useful.
-      render("[needs-suggestedfix]");
+      addPreText("suggested-fix", "[needs-suggestedfix]");
     }
     else {
       render(comments);
