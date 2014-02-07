@@ -66,8 +66,11 @@
     var tmpl, fix;
     var render = function(text) {
       tmpl = ["<pre>", text, "</pre>"];
+      var pre = document.createElement('pre');
+      pre.textContent = text;
       fix = document.getElementById("suggested-fix");
-      fix.innerHTML = tmpl.join("");
+      fix.innerHTML = "";
+      fix.appendChild(pre)
     };
 
     if (Array.isArray(comments)) {
