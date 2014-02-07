@@ -26,10 +26,8 @@ pre {
 }
 
 /* Loader image */
-.loader {
-	position: absolute;
-	left: 50px;
-}
+.loader {position: relative;
+	left: 50px;}
 
 /* General */
 
