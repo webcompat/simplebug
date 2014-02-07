@@ -1,19 +1,24 @@
 /* Very basic style for the simplified Bugs */
-
+html {
+	padding: 0;
+	margin: 0;
+}
 body {
-	background-color: rgb(246, 246, 246);
+	font-size: 1rem;
+	padding: 0;
+	margin: 0;
+	background-color: rgb(240, 240, 240);
 	font-family: "Helvetica Neue", Helvetica, sans-serif;
 }
 
 article {
-	margin: 1em;
+	margin: 0 0;
 }
 
 section {
 	background-color: rgb(255, 255, 255);
 	padding: 2em 1em;
-	margin: 1em 0;
-	position: relative;
+	margin: 0;
 }
 
 pre {
@@ -26,35 +31,106 @@ pre {
 	left: 50px;
 }
 
+/* General */
+
+header.general {
+	color: rgb(50,50,50);
+	max-width: 40rem;
+	margin: 0 auto;
+	padding:1rem 2rem;
+	font-weight: 900;
+	font-size: 1.5rem;
+	}
+
+.general .domain {
+	color: rgb(100,170,24);
+}
+
+article header {
+	margin: 0;
+	padding:0;}
+
+.bugnumber {
+	font-weight: 900;
+	font-size: 2em;
+	padding: 1em 2em;
+	background-color: rgb(184,216,151);
+
+}
+/* Basic */
+#basic {
+	margin: 0;
+	padding: 2em;
+
+}
+#basic p {
+	line-height: 1.8em;
+	font-family: "Helvetica Neue Light", Helvetica, sans-serif;
+	padding: 0;
+	font-weight: 300;
+	text-align:justify;
+}
+
+#url {
+	text-align: left;
+	margin:0;
+	padding:0;}
+
+#url .url_label {
+	display:inline-block;
+	margin:0;
+	padding:0;
+	font-family: Helvetica, sans-serif;
+	font-weight: 900;
+	color: rgb(38, 140, 192);
+}
+
+#url a.url {
+	display: block;
+	margin:0;
+	padding:0;
+	font-family: "Courier New", Courier, monospace;
+	overflow: hidden;
+	word-wrap: break-word;
+	word-break: break-all;}
+
+a.url:hover {overflow: scroll;}
+
 /* Description */
 #description {
+	font-family: "Courier New", Courier, monospace;
+	margin-top: 2em;
 	border-top: 10px solid rgb(38, 140, 192);
-	background-size: 2em;
+	background-size: 5%;
 	background-image: url('../images/description.svg');
 	background-position: 10px 10px;
 	background-repeat: no-repeat;
 }
 /* Fix */
 #suggested-fix {
-	background-size: 2em;
+	font-family: "Courier New", Courier, monospace;
+	margin-top: 2em;
+	background-size: 5%;
 	background-image: url('../images/fixit.svg');
 	background-position: 10px 10px;
 	background-repeat: no-repeat;
 }
 /* Information */
 #information {
-	background-size: 3em;
+	margin-top: 2em;
+	background-size: 5%;
 	background-image: url('../images/more-info.svg');
-	background-position: 3px 10px;
+	background-position: 10px 10px;
 	background-repeat: no-repeat;
 }
 
+footer {font-size: .95em;
+	font-weight: 900;
+	color:rgb(180,180,180);}
 /* rules for bigger screens */
 @media only screen and (min-width : 768px) {
-	body {
-		background-color: rgb(200, 200, 200);
-	}
-	article {
-		width: 40em;
+	article, .general, footer {
+		max-width: 40em;
+		margin: 0 auto;
 	}
 }
