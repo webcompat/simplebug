@@ -25,7 +25,6 @@
     if (text.trim() === "") {
       getWhiteboard();
     } else {
-      tmpl = ["<pre>", text, "</pre>"];
       var desc = document.getElementById("description");
       desc.innerHTML = tmpl.join("");
       getSuggestedFix(comments);
