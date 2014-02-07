@@ -92,7 +92,7 @@
   function getBugLink(id) {
     var tmpl = [
       "Comment on the bug here ",
-      "<a href=https://bugzilla.mozilla.org/show_bug.cgi?id=\"",
+      "<a href=\"https://bugzilla.mozilla.org/show_bug.cgi?id=",
         id, "\">", id,
       "</a>.</p>"
     ];
