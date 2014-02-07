@@ -11,13 +11,9 @@
     "clientsniff": "The recommended way to detect Firefox and other mobile browsers is by searching for the string “Mobi”. For more detailed information on user agent detection see the Mozilla Developer Network (https://developer.mozilla.org/en-US/docs/Browser_detection_using_the_user_agent#Mobile.2C_Tablet_or_Desktop)."
   };
 
-  function getAPI(config) {
-    var base = "https://api-dev.bugzilla.mozilla.org/latest/bug/" + BUGID;
-    if (config && config.whiteboard) {
-      return base;
-    } else {
-      return base + "/comment";
-    }
+  function getAPI(bug) {
+    var limit = "?include_fields=comments,url,summary,whiteboard"
+    return "https://api-dev.bugzilla.mozilla.org/latest/bug/" + bug + limit;
   }
 
   function addPreText(id, text) {
@@ -115,7 +111,7 @@
   }
 
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", getAPI());
+  xhr.open("GET", getAPI(BUGID));
   xhr.setRequestHeader("Content-Type", "application/json");
   xhr.setRequestHeader("Accept", "application/json");
   xhr.onload = showResponse;
