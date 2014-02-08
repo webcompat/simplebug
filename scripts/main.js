@@ -21,8 +21,8 @@
   function showResponse() {
     BUGINFO = JSON.parse(this.responseText);
     getDescription();
-    //decouple getSuggestedFix()
-    getBugLink(BUGINFO.id);
+    getSuggestedFix();
+    getBugLink();
   }
 
   function getBugInfo(url, hollaback) {
@@ -79,29 +79,35 @@
     }
   }
 
-  function getDefaultSuggestedFix(key) {
-    return FIXES[key];
+  function getDefaultSuggestedFix(whiteboard) {
+    if (whiteboard && whiteboard.indexOf("[serversniff]") != -1) {
+      addPreText("suggested-fix", FIXES["serversniff"]);
+    }
+    if (whiteboard && whiteboard.indexOf("[clientsniff]") != -1) {
+      addPreText("suggested-fix", FIXES["clientsniff"]);
+    }
   }
 
-  function getSuggestedFix(comments) {
-    var tmpl, fix;
-    if (Array.isArray(comments)) {
-      // Loop from the bottom comment to the top, picking the "oldest" tag
+  function getSuggestedFix() {
+    var commentUrl = getAPIEndpoint(BUGID, {comments: true});
+    getBugInfo(commentUrl, function() {
+      var response = JSON.parse(this.responseText);
+      var comments = response.comments;
+      // Loop from the bottom comment to the top, 
+      // picking the last "suggestedfix" tag
       for (var i = comments.length - 1; i > 0; i--) {
-        if (comments[i].tags && comments[i].tags.indexOf(FIXTAG) != -1) {
+        if (comments[i].tags && comments[i].tags.indexOf("suggestedfix") != -1) {
           addPreText("suggested-fix", comments[i].text);
           return;
         }
       }
-      // This bug needs some work before it's useful.
-      addPreText("suggested-fix", "[needs-suggestedfix]");
-    }
-    else {
-      addPreText(comments);
-    }
+      // We didn't have a suggestedfix tag, so just show the default.
+      getDefaultSuggestedFix(BUGINFO.whiteboard)
+    });
   }
 
-  function getBugLink(id) {
+  function getBugLink() {
+    var id = BUGINFO.id;
     var tmpl = [
       "Comment on the bug here ",
       "<a href=\"https://bugzilla.mozilla.org/show_bug.cgi?id=",
