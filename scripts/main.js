@@ -1,5 +1,4 @@
 (function(){
-  var hasWhiteboard = false;
   var BUGID = location.search.match(/id=(\d+)/) ? RegExp.$1 : null;
   var BUGINFO = {};
   var FIXTAG = "suggestedfix";
