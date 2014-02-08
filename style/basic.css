@@ -116,6 +116,7 @@ a.url:hover {overflow: scroll;}
 /* Information */
 #information {
 	margin-top: 2em;
+    padding-top: 3em;
 	background-size: 5%;
 	background-image: url('../images/more-info.svg');
 	background-position: 10px 10px;
