@@ -44,6 +44,16 @@
     desc.appendChild(pre);
   }
 
+  function getDefault(section, dict) {
+    var whiteboard = BUGINFO.whiteboard;
+    if (whiteboard && whiteboard.indexOf("[serversniff]") != -1) {
+      addPreText(section, dict["serversniff"]);
+    }
+    if (whiteboard && whiteboard.indexOf("[clientsniff]") != -1) {
+      addPreText(section, dict["clientsniff"]);
+    }
+  }
+
   function getDescription() {
     // we have to make another request to the "/comment" API endpoint
     // until https://bugzilla.mozilla.org/show_bug.cgi?id=969630 is fixed.
@@ -65,27 +75,9 @@
         addPreText("description", comments[0].text);
       } else {
         // Otherwise let's show the pre-canned response.
-        getDefaultDescription(BUGINFO.whiteboard)
+        getDefault("description", DESCRIPTIONS);
       };
     });
-  }
-
-  function getDefaultDescription(whiteboard) {
-    if (whiteboard && whiteboard.indexOf("[serversniff]") != -1) {
-      addPreText("description", DESCRIPTIONS["serversniff"]);
-    }
-    if (whiteboard && whiteboard.indexOf("[clientsniff]") != -1) {
-      addPreText("description", DESCRIPTIONS["clientsniff"]);
-    }
-  }
-
-  function getDefaultSuggestedFix(whiteboard) {
-    if (whiteboard && whiteboard.indexOf("[serversniff]") != -1) {
-      addPreText("suggested-fix", FIXES["serversniff"]);
-    }
-    if (whiteboard && whiteboard.indexOf("[clientsniff]") != -1) {
-      addPreText("suggested-fix", FIXES["clientsniff"]);
-    }
   }
 
   function getSuggestedFix() {
@@ -102,7 +94,7 @@
         }
       }
       // We didn't have a suggestedfix tag, so just show the default.
-      getDefaultSuggestedFix(BUGINFO.whiteboard)
+      getDefault("suggested-fix", FIXES);
     });
   }
 
