@@ -105,7 +105,7 @@ a.url:hover {overflow: scroll;}
 	background-repeat: no-repeat;
 }
 /* Fix */
-#suggested-fix {
+#suggestedfix {
 	font-family: "Courier New", Courier, monospace;
 	margin-top: 2em;
 	background-size: 5%;

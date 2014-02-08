@@ -89,12 +89,12 @@
       // picking the last "suggestedfix" tag
       for (var i = comments.length - 1; i > 0; i--) {
         if (comments[i].tags && comments[i].tags.indexOf("suggestedfix") != -1) {
-          addPreText("suggested-fix", comments[i].text);
+          addPreText("suggestedfix", comments[i].text);
           return;
         }
       }
       // We didn't have a suggestedfix tag, so just show the default.
-      getDefault("suggested-fix", FIXES);
+      getDefault("suggestedfix", FIXES);
     });
   }
 
