@@ -101,9 +101,9 @@
   function getBugLink() {
     var id = BUGINFO.id;
     var tmpl = [
-      "Comment on the bug here ",
+      "Comment on the ",
       "<a href=\"https://bugzilla.mozilla.org/show_bug.cgi?id=",
-        id, "\">", id,
+        id, "\">bug ", id,
       "</a>.</p>"
     ];
     var link = document.getElementById("information");
