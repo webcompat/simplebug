@@ -54,7 +54,7 @@
     }
   }
 
-  function getDescription() {
+  function getTaggedComment(tag, callback) {
     // we have to make another request to the "/comment" API endpoint
     // until https://bugzilla.mozilla.org/show_bug.cgi?id=969630 is fixed.
     var commentUrl = getAPIEndpoint(BUGID, {comments: true});
@@ -62,13 +62,19 @@
       var response = JSON.parse(this.responseText);
       var comments = response.comments;
       // Loop from the bottom comment to the top, 
-      // picking the last "description" tag
+      // picking the last tag
       for (var i = comments.length - 1; i > 0; i--) {
-        if (comments[i].tags && comments[i].tags.indexOf("description") != -1) {
-          addPreText("description", comments[i].text);
+        if (comments[i].tags && comments[i].tags.indexOf(tag) != -1) {
+          addPreText(tag, comments[i].text);
           return;
         }
       }
+      callback(comments);
+    });
+  }
+
+  function getDescription() {
+    getTaggedComment("description", function(comments) {
       // We didn't find a "description" tag. So let's take the first comment
       // (if it's nonempty)
       if (comments[0].text && comments[0].text.trim() !== "") {
@@ -81,18 +87,7 @@
   }
 
   function getSuggestedFix() {
-    var commentUrl = getAPIEndpoint(BUGID, {comments: true});
-    getBugInfo(commentUrl, function() {
-      var response = JSON.parse(this.responseText);
-      var comments = response.comments;
-      // Loop from the bottom comment to the top, 
-      // picking the last "suggestedfix" tag
-      for (var i = comments.length - 1; i > 0; i--) {
-        if (comments[i].tags && comments[i].tags.indexOf("suggestedfix") != -1) {
-          addPreText("suggestedfix", comments[i].text);
-          return;
-        }
-      }
+    getTaggedComment("suggestedfix", function() {
       // We didn't have a suggestedfix tag, so just show the default.
       getDefault("suggestedfix", FIXES);
     });
