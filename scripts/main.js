@@ -20,9 +20,9 @@
 
   function showResponse() {
     BUGINFO = JSON.parse(this.responseText);
+    getBugLink();
     getDescription();
     getSuggestedFix();
-    getBugLink();
   }
 
   function getBugInfo(url, hollaback) {
@@ -108,6 +108,15 @@
     ];
     var link = document.getElementById("information");
     link.innerHTML = tmpl.join("");
+
+    //kind of an ugly place to put this.
+    var issueUrl = document.querySelector("#url .url");
+    var link = document.createTextNode(BUGINFO.url);
+    issueUrl.href = BUGINFO.url;
+    issueUrl.appendChild(link);
+    var domain = document.querySelector(".domain");
+    var domainLink = document.createTextNode(issueUrl.hostname);
+    domain.appendChild(domainLink);
   }
 
   //main entry method
