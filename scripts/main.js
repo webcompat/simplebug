@@ -1,6 +1,6 @@
 (function(){
-  var hasWhiteboard = false;
   var BUGID = location.search.match(/id=(\d+)/) ? RegExp.$1 : null;
+  var BUGINFO = {};
   var FIXTAG = "suggestedfix";
   var DESCRIPTIONS = {
     "serversniff": "This website is using server side user agent detection to determine if a user is browsing using a desktop or mobile client. Unfortunately the site is not properly detecting the user agent string for mobile Firefox browsers. This is causing Firefox mobile browsers to be redirected to the desktop version of the website rather than mobile.",
@@ -11,14 +11,29 @@
     "clientsniff": "The recommended way to detect Firefox and other mobile browsers is by searching for the string “Mobi”. For more detailed information on user agent detection see the Mozilla Developer Network (https://developer.mozilla.org/en-US/docs/Browser_detection_using_the_user_agent#Mobile.2C_Tablet_or_Desktop)."
   };
 
-  function getAPI(config) {
-    var base = "https://api-dev.bugzilla.mozilla.org/latest/bug/" + BUGID;
-    if (config && config.whiteboard) {
-      return base;
-    } else {
-      return base + "/comment";
-    }
+  function getAPIEndpoint(bug, comments) {
+    var limit = (comments && comments.comments) ?
+                "/comment" :
+                "?include_fields=comments,url,summary,whiteboard,id";
+    return "https://api-dev.bugzilla.mozilla.org/latest/bug/" + bug + limit;
   }
+
+  function showResponse() {
+    BUGINFO = JSON.parse(this.responseText);
+    getDescription();
+    getSuggestedFix();
+    getBugLink();
+  }
+
+  function getBugInfo(url, hollaback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Accept", "application/json");
+    xhr.onload = hollaback;
+    xhr.send();
+  }
+
 
   function addPreText(id, text) {
     var pre = document.createElement("pre");
@@ -29,74 +44,70 @@
     desc.appendChild(pre);
   }
 
-  function getDescription(comments) {
-    var text = Array.isArray(comments) ? comments[0].raw_text : comments;
-    if (text.trim() === "") {
-      getWhiteboard();
-    } else {
-      addPreText("description", text);
-      getSuggestedFix(comments);
-    }
-  }
-
-  function getDefaultDescription(key) {
-    return DESCRIPTIONS[key];
-  }
-
-  function getDefaultSuggestedFix(key) {
-    return FIXES[key];
-  }
-
-  function getWhiteboard() {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", getAPI({whiteboard: true}));
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.setRequestHeader("Accept", "application/json");
-    xhr.onload = function(){
+  function getDescription() {
+    // we have to make another request to the "/comment" API endpoint
+    // until https://bugzilla.mozilla.org/show_bug.cgi?id=969630 is fixed.
+    var commentUrl = getAPIEndpoint(BUGID, {comments: true});
+    getBugInfo(commentUrl, function() {
       var response = JSON.parse(this.responseText);
-      whiteboard = response.whiteboard;
-      hasWhiteboard = true;
-      if (whiteboard && whiteboard.indexOf("[serversniff]") != -1) {
-        getDescription.call(null, getDefaultDescription("serversniff"));
-        getSuggestedFix.call(null, getDefaultSuggestedFix("serversniff"));
+      var comments = response.comments;
+      // Loop from the bottom comment to the top, 
+      // picking the last "description" tag
+      for (var i = comments.length - 1; i > 0; i--) {
+        if (comments[i].tags && comments[i].tags.indexOf("description") != -1) {
+          addPreText("description", comments[i].text);
+          return;
+        }
       }
-
-      if (whiteboard && whiteboard.indexOf("[clientsniff]") != -1) {
-        getDescription.call(null, getDefaultDescription("clientsniff"));
-        getSuggestedFix.call(null, getDefaultSuggestedFix("clientsniff"));
-      }
-    }
-    xhr.send();
+      // We didn't find a "description" tag. So let's take the first comment
+      // (if it's nonempty)
+      if (comments[0].text && comments[0].text.trim() !== "") {
+        addPreText("description", comments[0].text);
+      } else {
+        // Otherwise let's show the pre-canned response.
+        getDefaultDescription(BUGINFO.whiteboard)
+      };
+    });
   }
 
-  function getSuggestedFix(comments) {
-    var tmpl, fix;
-    var render = function(text) {
-      tmpl = ["<pre>", text, "</pre>"];
-      var pre = document.createElement('pre');
-      pre.textContent = text;
-      fix = document.getElementById("suggested-fix");
-      fix.innerHTML = "";
-      fix.appendChild(pre)
-    };
+  function getDefaultDescription(whiteboard) {
+    if (whiteboard && whiteboard.indexOf("[serversniff]") != -1) {
+      addPreText("description", DESCRIPTIONS["serversniff"]);
+    }
+    if (whiteboard && whiteboard.indexOf("[clientsniff]") != -1) {
+      addPreText("description", DESCRIPTIONS["clientsniff"]);
+    }
+  }
 
-    if (Array.isArray(comments)) {
-      // Loop from the bottom comment to the top, picking the "oldest" tag
+  function getDefaultSuggestedFix(whiteboard) {
+    if (whiteboard && whiteboard.indexOf("[serversniff]") != -1) {
+      addPreText("suggested-fix", FIXES["serversniff"]);
+    }
+    if (whiteboard && whiteboard.indexOf("[clientsniff]") != -1) {
+      addPreText("suggested-fix", FIXES["clientsniff"]);
+    }
+  }
+
+  function getSuggestedFix() {
+    var commentUrl = getAPIEndpoint(BUGID, {comments: true});
+    getBugInfo(commentUrl, function() {
+      var response = JSON.parse(this.responseText);
+      var comments = response.comments;
+      // Loop from the bottom comment to the top, 
+      // picking the last "suggestedfix" tag
       for (var i = comments.length - 1; i > 0; i--) {
-        if (comments[i].tags && comments[i].tags.indexOf(FIXTAG) != -1) {
+        if (comments[i].tags && comments[i].tags.indexOf("suggestedfix") != -1) {
           addPreText("suggested-fix", comments[i].text);
           return;
         }
       }
-      // This bug needs some work before it's useful.
-      addPreText("suggested-fix", "[needs-suggestedfix]");
-    }
-    else {
-      render(comments);
-    }
+      // We didn't have a suggestedfix tag, so just show the default.
+      getDefaultSuggestedFix(BUGINFO.whiteboard)
+    });
   }
 
-  function getBugLink(id) {
+  function getBugLink() {
+    var id = BUGINFO.id;
     var tmpl = [
       "Comment on the bug here ",
       "<a href=\"https://bugzilla.mozilla.org/show_bug.cgi?id=",
@@ -107,17 +118,6 @@
     link.innerHTML = tmpl.join("");
   }
 
-  function showResponse() {
-    var response = JSON.parse(xhr.responseText);
-    var comments = response.comments;
-    getDescription(comments);
-    getBugLink(BUGID);
-  }
-
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", getAPI());
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader("Accept", "application/json");
-  xhr.onload = showResponse;
-  xhr.send();
+  //main entry method
+  getBugInfo(getAPIEndpoint(BUGID), showResponse);
 }());
