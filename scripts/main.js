@@ -150,6 +150,7 @@
     var domain = document.querySelector(".domain");
     var domainLink = document.createTextNode(issueUrl.hostname);
     domain.appendChild(domainLink);
+    document.title = document.querySelector(".general").textContent;
   }
 
   //main entry method
