@@ -40,7 +40,44 @@
     var text = document.createTextNode(text);
     desc.innerHTML = "";
     pre.appendChild(text);
+    linkifyTextNode(pre.firstChild);
     desc.appendChild(pre);
+  }
+  function linkifyTextNode(textNode){ // if you try to use a regexp to match URLs, you have way more than two problems.. 
+    // Let's try this: assume white-space separation of words and/or URLs
+    // We know about CJK and whitespace, but assume for this exercise that even CJK users might often add ws to separate URLs from text
+    var words = textNode.data.split(/(\s+)/g), currentNode=textNode, offset=0; // regex trick: ()-capturing the whitespace will add it to the words array for correct char counts/offset calculation
+    for(var word,origWord,i=0;word=words[i];i++){
+      // see if we have a <url>, (url) or [url] thingy going on
+      if (/https?:\/\//.test(word)) {
+        origLength = word.length;
+        if(/(\.|,|\?|!)$/.test(word)){
+          word = word.replace(/(\.|,|\?|!)+$/, '');
+        }
+        if (/^(\(|<|\[)/.test(word) && /(\)|>|\])$/.test(word)) {
+          offset+=1;
+          word = word.substr(1,word.length-2);
+        }
+        // Note: this did not handle (my site is: http://example.com) style parens.. 
+        if (word.indexOf(')') == word.length-1 && word.indexOf('(') == -1) {
+          // For our sanity, let's assume parens in URLs will always match.
+          // Naturally, they are under absolutely no requirement to do so..
+          word = word.substr(0, word.length-1);
+        };
+        // And here comes our funny DOM gymnastics to throw an A node inside a #TEXT node
+        currentNode = currentNode.splitText(offset);
+        var a = document.createElement('a');
+        a.href = a.textContent = word;
+        currentNode.parentElement.insertBefore(a, currentNode);
+        currentNode = currentNode.splitText(word.length);
+        currentNode.parentElement.removeChild(currentNode.previousSibling);
+        offset=0;
+        // oh wait. If any of the above cases chopped off a ) at the end of a URL, we're off by one now.. Or off by many, if there was punctuation.
+        if (origLength != word.length) {offset = origLength - word.length};
+      }else{
+        offset+=word.length;
+      }
+    }
   }
 
   function getDefault(section, dict) {
