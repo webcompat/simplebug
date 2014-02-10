@@ -44,16 +44,18 @@
     desc.appendChild(pre);
   }
   function linkifyTextNode(textNode){ // if you try to use a regexp to match URLs, you have way more than two problems.. 
+    // For examples, see Jeff Atwood: http://www.codinghorror.com/blog/2008/10/the-problem-with-urls.html
     // Let's try this: assume white-space separation of words and/or URLs
     // We know about CJK and whitespace, but assume for this exercise that even CJK users might often add ws to separate URLs from text
     var words = textNode.data.split(/(\s+)/g), currentNode=textNode, offset=0; // regex trick: ()-capturing the whitespace will add it to the words array for correct char counts/offset calculation
     for(var word,origWord,i=0;word=words[i];i++){
-      // see if we have a <url>, (url) or [url] thingy going on
-      if (/https?:\/\//.test(word)) {
+      if (/https?:\/\//.test(word)) { // if there isn't a http/s protocol.. we don't care
         origLength = word.length;
+        // remove punctuation at end of word (and break any URLs that DO end with such punctuation.)
         if(/(\.|,|\?|!)$/.test(word)){
           word = word.replace(/(\.|,|\?|!)+$/, '');
         }
+        // see if we have a <url>, (url) or [url] thingy going on, remove parens if we do
         if (/^(\(|<|\[)/.test(word) && /(\)|>|\])$/.test(word)) {
           offset+=1;
           word = word.substr(1,word.length-2);
