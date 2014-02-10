@@ -109,7 +109,7 @@ a.url:hover {overflow: scroll;}
 /* Fix */
 #suggested-fix {
 	font-family: "Andale Mono", "Courier New", Courier, monospace;
-    line-height: 1.5em;    
+        line-height: 1.5em;    
 	margin-top: 2em;
 	padding: 2em;
 	background-size: 5%;
