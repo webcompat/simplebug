@@ -1,142 +1,136 @@
 /* Very basic style for the simplified Bugs */
-html {
-	padding: 0;
-	margin: 0;
+ html {
+    padding: 0;
+    margin: 0;
 }
 body {
-	font-size: 1rem;
-	padding: 0;
-	margin: 0;
-	background-color: rgb(240, 240, 240);
-	font-family: "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 1rem;
+    padding: 0;
+    margin: 0;
+    background-color: rgb(240, 240, 240);
+    font-family:"Helvetica Neue", Helvetica, sans-serif;
 }
-
 article {
-	margin: 0 0;
+    margin: 0 0;
 }
-
 section {
-	background-color: rgb(255, 255, 255);
-	padding: 2em 1em;
-	margin: 0;
+    background-color: rgb(255, 255, 255);
+    padding: 2em 1em;
+    margin: 0;
 }
-
 pre {
-	white-space: pre-wrap;
+    white-space: pre-wrap;
 }
-
 /* Loader image */
-.loader {position: relative;
-	left: 50px;}
-
-/* General */
-
-header.general {
-	color: rgb(50,50,50);
-	max-width: 40rem;
-	margin: 0 auto;
-	padding:1rem 2rem;
-	font-weight: 900;
-	font-size: 1.5rem;
-	}
-
-.general .domain {
-	color: rgb(100,170,24);
+ .loader {
+    position: relative;
+    left: 50px;
 }
-
+/* General */
+ header.general {
+    color: rgb(50, 50, 50);
+    max-width: 40rem;
+    margin: 0 auto;
+    padding:1rem 2rem;
+    font-weight: 900;
+    font-size: 1.5rem;
+}
+.general .domain {
+    color: rgb(100, 170, 24);
+}
 article header {
-	margin: 0;
-	padding:0;}
-
+    margin: 0;
+    padding:0;
+}
 .bugnumber {
-	font-weight: 900;
-	font-size: 2em;
-	padding: 1em 2em;
-	background-color: rgb(184,216,151);
-
+    font-weight: 900;
+    font-size: 2em;
+    padding: 1em 2em;
+    background-color: rgb(184, 216, 151);
 }
 /* Basic */
-#basic {
-	margin: 0;
-	padding: 2em;
-
+ #basic {
+    margin: 0;
+    padding: 2em;
 }
 #basic p {
-	line-height: 1.8em;
-	font-family: "Helvetica Neue Light", Helvetica, sans-serif;
-	padding: 0;
-	font-weight: 300;
-	text-align:justify;
+    line-height: 1.8em;
+    font-family:"Helvetica Neue Light", Helvetica, sans-serif;
+    padding: 0;
+    font-weight: 300;
+    text-align:justify;
 }
-
 #url {
-	text-align: left;
-	margin:0;
-	padding:0;}
-
-#url .url_label {
-	display:inline-block;
-	margin:0;
-	padding:0;
-	font-family: Helvetica, sans-serif;
-	font-weight: 900;
-	color: rgb(38, 140, 192);
+    text-align: left;
+    margin:0;
+    padding:0;
 }
-
+#url .url_label {
+    display:inline-block;
+    margin:0;
+    padding:0;
+    font-family: Helvetica, sans-serif;
+    font-weight: 900;
+    color: rgb(38, 140, 192);
+}
 #url a.url {
-	display: block;
-	margin:0;
-	padding:0;
-	font-family: "Courier New", Courier, monospace;
-	overflow: hidden;
-	word-wrap: break-word;
-	word-break: break-all;}
-
-a.url:hover {overflow: scroll;}
-
+    display: block;
+    margin:0;
+    padding:0;
+    font-family:"Courier New", Courier, monospace;
+    overflow: hidden;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+a.url:hover {
+    overflow: scroll;
+}
 /* Description */
-#description {
-	font-family: "Andale Mono", "Courier New", Courier, monospace;
-    line-height: 1.5em;    
+ #description {
+    font-family:"Andale Mono", "Courier New", Courier, monospace;
+    line-height: 1.5em;
     margin-top: 2em;
     padding: 2em;
-	border-top: 10px solid rgb(38, 140, 192);
-	background-size: 5%;
-	background-image: url('../images/description.svg');
-	background-position: 10px 10px;
-	background-repeat: no-repeat;
+    border-top: 10px solid rgb(38, 140, 192);
+    background-size: 5%;
+    background-image: url('../images/description.svg');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    word-wrap: break-word;
 }
 /* Fix */
-#suggestedfix {
-	font-family: "Andale Mono", "Courier New", Courier, monospace;
-	line-height: 1.5em;    
-	margin-top: 2em;
-	padding: 2em;
-	background-size: 5%;
-	background-image: url('../images/fixit.svg');
-	background-position: 10px 10px;
-	background-repeat: no-repeat;
+ #suggestedfix {
+    font-family:"Andale Mono", "Courier New", Courier, monospace;
+    line-height: 1.5em;
+    margin-top: 2em;
+    padding: 2em;
+    background-size: 5%;
+    background-image: url('../images/fixit.svg');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    word-wrap: break-word;
 }
 /* Information */
-#information {
-	font-family: "Helvetica Neue Light", Helvetica, sans-serif;
-	font-weight: 300;
-	line-height: 1.5em;    
-	margin-top: 2em;
-	padding: 3em 2em 2em 2em;
-	background-size: 5%;
-	background-image: url('../images/more-info.svg');
-	background-position: 10px 10px;
-	background-repeat: no-repeat;
+ #information {
+    font-family:"Helvetica Neue Light", Helvetica, sans-serif;
+    font-weight: 300;
+    line-height: 1.5em;
+    margin-top: 2em;
+    padding: 3em 2em 2em 2em;
+    background-size: 5%;
+    background-image: url('../images/more-info.svg');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
 }
-
-footer {font-size: .95em;
-	font-weight: 900;
-	color:rgb(180,180,180);}
+footer {
+    font-size: .95em;
+    font-weight: 900;
+    color:rgb(180, 180, 180);
+}
 /* rules for bigger screens */
-@media only screen and (min-width : 768px) {
-	article, .general, footer {
-		max-width: 40em;
-		margin: 0 auto;
-	}
+ @media only screen and (min-width : 768px) {
+    article, .general, footer {
+        max-width: 40em;
+        margin: 0 auto;
+    }
 }
