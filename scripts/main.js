@@ -36,18 +36,18 @@
 
 
   function addPreText(id, text) {
-    var pre = document.createElement("pre");
     var desc = document.getElementById(id);
-    if (linkified){    
+    desc.innerHTML = "";
+    if (linkified){
+      var content = document.createElement("pre");
       var text = document.createTextNode(text);
-      desc.innerHTML = "";
-      pre.appendChild(text);
-        linkifyTextNode(pre.firstChild);
+      content.appendChild(text);
+      linkifyTextNode(content.firstChild);
       } else {
-        desc.innerHTML = text;
-        pre.appendChild(text);
+      var content = document.createElement("p");
+      content.innerHTML = text;
       }
-    desc.appendChild(pre);
+    desc.appendChild(content);
   }
   function linkifyTextNode(textNode){ // if you try to use a regexp to match URLs, you have way more than two problems.. 
     // For examples, see Jeff Atwood: http://www.codinghorror.com/blog/2008/10/the-problem-with-urls.html
