@@ -47,8 +47,9 @@
     // For examples, see Jeff Atwood: http://www.codinghorror.com/blog/2008/10/the-problem-with-urls.html
     // Let's try this: assume white-space separation of words and/or URLs
     // We know about CJK and whitespace, but assume for this exercise that even CJK users might often add ws to separate URLs from text
-    var words = textNode.data.split(/(\s+)/g), currentNode=textNode, offset=0; // regex trick: ()-capturing the whitespace will add it to the words array for correct char counts/offset calculation
-    for(var word,origWord,i=0;word=words[i];i++){
+    var words = textNode.data.split(/(\s+|"|')/g), currentNode=textNode, offset=0; // regex trick: ()-capturing the whitespace will add it to the words array for correct char counts/offset calculation
+    for(var word,origLength,arLength=words.length,i=0;i<arLength;i++){
+      word = words[i];
       if (/https?:\/\//.test(word)) { // if there isn't a http/s protocol.. we don't care
         origLength = word.length;
         // remove punctuation at end of word (and break any URLs that DO end with such punctuation.)
