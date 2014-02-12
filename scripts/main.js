@@ -1,6 +1,5 @@
 (function(){
   var BUGID = location.search.match(/id=(\d+)/) ? RegExp.$1 : null;
-  var linkified = true;
   var BUGINFO = {};
   var DESCRIPTIONS = {
     "serversniff": "This website is using server side user agent detection to determine if a user is browsing using a desktop or mobile client. Unfortunately the site is not properly detecting the user agent string for mobile Firefox browsers. This is causing Firefox mobile browsers to be redirected to the desktop version of the website rather than mobile.",
@@ -35,17 +34,17 @@
   }
 
 
-  function addPreText(id, text) {
+  function addPreText(id, text, linkified) {
     var desc = document.getElementById(id);
     desc.innerHTML = "";
     if (linkified){
+      var content = document.createElement("p");
+      content.innerHTML = text;
+      } else {
       var content = document.createElement("pre");
       var text = document.createTextNode(text);
       content.appendChild(text);
       linkifyTextNode(content.firstChild);
-      } else {
-      var content = document.createElement("p");
-      content.innerHTML = text;
       }
     desc.appendChild(content);
   }
@@ -91,12 +90,10 @@
   function getDefault(section, dict) {
     var whiteboard = BUGINFO.whiteboard;
     if (whiteboard && whiteboard.indexOf("[serversniff]") != -1) {
-      linkified = false;
-      addPreText(section, dict["serversniff"]);
+      addPreText(section, dict["serversniff"], true);
     }
     if (whiteboard && whiteboard.indexOf("[clientsniff]") != -1) {
-      linkified = false;
-      addPreText(section, dict["clientsniff"]);
+      addPreText(section, dict["clientsniff"], true);
     }
   }
 
