@@ -33,6 +33,17 @@
     xhr.send();
   }
 
+  // simple helper methods for setting and getting text
+  // (so this works in IE < 9).
+  function setText(elm, text) {
+    var textProp = ('textContent' in elm) ? 'textContent' : 'innerText';
+    elm[textProp] = text;
+  }
+
+  function getText(elm) {
+    return elm.textContent || elm.innerText;
+  }
+
   function addPreText(id, text, linkified) {
     var content;
     var desc = document.getElementById(id);
@@ -92,7 +103,8 @@
         // inside a #TEXT node
         currentNode = currentNode.splitText(offset);
         var a = document.createElement('a');
-        a.href = a.textContent = word;
+        a.href = word;
+        setText(a, word);
         currentNode.parentElement.insertBefore(a, currentNode);
         currentNode = currentNode.splitText(word.length);
         currentNode.parentElement.removeChild(currentNode.previousSibling);
@@ -176,7 +188,7 @@
     var domain = document.querySelector(".domain");
     var domainLink = document.createTextNode(issueUrl.hostname);
     domain.appendChild(domainLink);
-    document.title = document.querySelector(".general").textContent;
+    document.title = getText(document.querySelector(".general"));
   }
 
   //main entry method
