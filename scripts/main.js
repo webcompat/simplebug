@@ -6,8 +6,8 @@
     "clientsniff": "This website is using client side user agent detection to determine if a user is browsing using a desktop or mobile client. Unfortunately the site is not properly detecting the user agent string for mobile Firefox browsers. This is causing Firefox mobile browsers to be redirected to the desktop version of the website rather than mobile." 
   };
   var FIXES = {
-    "serversniff": "The recommended way to detect Firefox and other mobile browsers is by searching for the string “Mobi”. This can be implemented through custom code or through a library/framework. If it is through a library/framework you can check that it is up to date or reach out to the vendor for more information. For more detailed information on user agent detection see the Mozilla Developer Network (https://developer.mozilla.org/en-US/docs/Browser_detection_using_the_user_agent#Mobile.2C_Tablet_or_Desktop).",
-    "clientsniff": "The recommended way to detect Firefox and other mobile browsers is by searching for the string “Mobi”. For more detailed information on user agent detection see the Mozilla Developer Network (https://developer.mozilla.org/en-US/docs/Browser_detection_using_the_user_agent#Mobile.2C_Tablet_or_Desktop)."
+    "serversniff": "The recommended way to detect Firefox and other mobile browsers is by searching for the string “Mobi”. This can be implemented through custom code or through a library/framework. If it is through a library/framework you can check that it is up to date or reach out to the vendor for more information. Mozilla Developer Network has detailed <a href='https://developer.mozilla.org/en-US/docs/Browser_detection_using_the_user_agent#Mobile.2C_Tablet_or_Desktop'>information on user agent detection</a>.",
+    "clientsniff": "The recommended way to detect Firefox and other mobile browsers is by searching for the string “Mobi”. Mozilla Developer Network has detailed <a href='https://developer.mozilla.org/en-US/docs/Browser_detection_using_the_user_agent#Mobile.2C_Tablet_or_Desktop'>information on user agent detection</a>."
   };
 
   function getAPIEndpoint(bug, comments) {
@@ -34,14 +34,19 @@
   }
 
 
-  function addPreText(id, text) {
-    var pre = document.createElement("pre");
+  function addPreText(id, text, linkified) {
     var desc = document.getElementById(id);
-    var text = document.createTextNode(text);
     desc.innerHTML = "";
-    pre.appendChild(text);
-    linkifyTextNode(pre.firstChild);
-    desc.appendChild(pre);
+    if (linkified){
+      var content = document.createElement("p");
+      content.innerHTML = text;
+      } else {
+      var content = document.createElement("pre");
+      var text = document.createTextNode(text);
+      content.appendChild(text);
+      linkifyTextNode(content.firstChild);
+      }
+    desc.appendChild(content);
   }
   function linkifyTextNode(textNode){ // if you try to use a regexp to match URLs, you have way more than two problems.. 
     // For examples, see Jeff Atwood: http://www.codinghorror.com/blog/2008/10/the-problem-with-urls.html
@@ -86,10 +91,10 @@
   function getDefault(section, dict) {
     var whiteboard = BUGINFO.whiteboard;
     if (whiteboard && whiteboard.indexOf("[serversniff]") != -1) {
-      addPreText(section, dict["serversniff"]);
+      addPreText(section, dict["serversniff"], true);
     }
     if (whiteboard && whiteboard.indexOf("[clientsniff]") != -1) {
-      addPreText(section, dict["clientsniff"]);
+      addPreText(section, dict["clientsniff"], true);
     }
   }
 
