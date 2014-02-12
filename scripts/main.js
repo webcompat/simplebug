@@ -36,6 +36,8 @@
 
   function addPreText(id, text, linkified) {
     var desc = document.getElementById(id);
+    // let's avoid Mozilla lingo on simplebug..
+    text = text.replace(/B2G/g, 'Firefox OS').replace(/fennec/ig, 'Firefox for Android');
     desc.innerHTML = "";
     if (linkified){
       var content = document.createElement("p");
