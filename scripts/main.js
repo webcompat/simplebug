@@ -39,8 +39,8 @@
     var desc = document.getElementById(id);
     // let's avoid Mozilla lingo on simplebug.
     text = text.replace(/b2g/ig, 'Firefox OS')
-               .replace(/fxos/ig, 'Firefox OS');
-               .replace(/fennec/ig, 'Firefox for Android')
+               .replace(/fxos/ig, 'Firefox OS')
+               .replace(/fennec/ig, 'Firefox for Android');
     desc.innerHTML = "";
 
     if (linkified) {
