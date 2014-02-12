@@ -35,16 +35,17 @@
 
 
   function addPreText(id, text, linkified) {
+    var content;
     var desc = document.getElementById(id);
     // let's avoid Mozilla lingo on simplebug..
     text = text.replace(/B2G/g, 'Firefox OS').replace(/fennec/ig, 'Firefox for Android');
     desc.innerHTML = "";
     if (linkified){
-      var content = document.createElement("p");
+      content = document.createElement("p");
       content.innerHTML = text;
       } else {
-      var content = document.createElement("pre");
-      var text = document.createTextNode(text);
+      content = document.createElement("pre");
+      text = document.createTextNode(text);
       content.appendChild(text);
       linkifyTextNode(content.firstChild);
       }
@@ -73,7 +74,7 @@
           // For our sanity, let's assume parens in URLs will always match.
           // Naturally, they are under absolutely no requirement to do so..
           word = word.substr(0, word.length-1);
-        };
+        }
         // And here comes our funny DOM gymnastics to throw an A node inside a #TEXT node
         currentNode = currentNode.splitText(offset);
         var a = document.createElement('a');
@@ -83,7 +84,7 @@
         currentNode.parentElement.removeChild(currentNode.previousSibling);
         offset=0;
         // oh wait. If any of the above cases chopped off a ) at the end of a URL, we're off by one now.. Or off by many, if there was punctuation.
-        if (origLength != word.length) {offset = origLength - word.length};
+        if (origLength != word.length) {offset = origLength - word.length;}
       }else{
         offset+=word.length;
       }
@@ -93,10 +94,10 @@
   function getDefault(section, dict) {
     var whiteboard = BUGINFO.whiteboard;
     if (whiteboard && whiteboard.indexOf("[serversniff]") != -1) {
-      addPreText(section, dict["serversniff"], true);
+      addPreText(section, dict.serversniff, true);
     }
     if (whiteboard && whiteboard.indexOf("[clientsniff]") != -1) {
-      addPreText(section, dict["clientsniff"], true);
+      addPreText(section, dict.clientsniff, true);
     }
   }
 
@@ -128,7 +129,7 @@
       } else {
         // Otherwise let's show the pre-canned response.
         getDefault("description", DESCRIPTIONS);
-      };
+      }
     });
   }
 
@@ -152,9 +153,9 @@
 
     //kind of an ugly place to put this.
     var issueUrl = document.querySelector("#url .url");
-    var link = document.createTextNode(BUGINFO.url);
+    var urlLink = document.createTextNode(BUGINFO.url);
     issueUrl.href = BUGINFO.url;
-    issueUrl.appendChild(link);
+    issueUrl.appendChild(urlLink);
     var domain = document.querySelector(".domain");
     var domainLink = document.createTextNode(issueUrl.hostname);
     domain.appendChild(domainLink);
