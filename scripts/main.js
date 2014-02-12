@@ -3,7 +3,7 @@
   var BUGINFO = {};
   var DESCRIPTIONS = {
     "serversniff": "This website is using server side user agent detection to determine if a user is browsing using a desktop or mobile client. Unfortunately the site is not properly detecting the user agent string for mobile Firefox browsers. This is causing Firefox mobile browsers to be redirected to the desktop version of the website rather than mobile.",
-    "clientsniff": "This website is using client side user agent detection to determine if a user is browsing using a desktop or mobile client. Unfortunately the site is not properly detecting the user agent string for mobile Firefox browsers. This is causing Firefox mobile browsers to be redirected to the desktop version of the website rather than mobile." 
+    "clientsniff": "This website is using client side user agent detection to determine if a user is browsing using a desktop or mobile client. Unfortunately the site is not properly detecting the user agent string for mobile Firefox browsers. This is causing Firefox mobile browsers to be redirected to the desktop version of the website rather than mobile."
   };
   var FIXES = {
     "serversniff": "The recommended way to detect Firefox and other mobile browsers is by searching for the string “Mobi”. This can be implemented through custom code or through a library/framework. If it is through a library/framework you can check that it is up to date or reach out to the vendor for more information. Mozilla Developer Network has detailed <a href='https://developer.mozilla.org/en-US/docs/Browser_detection_using_the_user_agent#Mobile.2C_Tablet_or_Desktop'>information on user agent detection</a>.",
@@ -33,7 +33,6 @@
     xhr.send();
   }
 
-
   function addPreText(id, text, linkified) {
     var content;
     var desc = document.getElementById(id);
@@ -54,42 +53,57 @@
     }
     desc.appendChild(content);
   }
-  function linkifyTextNode(textNode){ // if you try to use a regexp to match URLs, you have way more than two problems.. 
-    // For examples, see Jeff Atwood: http://www.codinghorror.com/blog/2008/10/the-problem-with-urls.html
+
+  function linkifyTextNode(textNode){
+    // If you try to use a regexp to match URLs, you have way more than
+    // two problems.. For examples, see Jeff Atwood:
+    // http://www.codinghorror.com/blog/2008/10/the-problem-with-urls.html
     // Let's try this: assume white-space separation of words and/or URLs
-    // We know about CJK and whitespace, but assume for this exercise that even CJK users might often add ws to separate URLs from text
-    var words = textNode.data.split(/(\s+|"|')/g), currentNode=textNode, offset=0; // regex trick: ()-capturing the whitespace will add it to the words array for correct char counts/offset calculation
-    for(var word,origLength,arLength=words.length,i=0;i<arLength;i++){
+    // We know about CJK and whitespace, but assume for this exercise that
+    // even CJK users might often add ws to separate URLs from text
+    var words = textNode.data.split(/(\s+|"|')/g),
+                currentNode = textNode,
+                offset = 0;
+    // regex trick: ()-capturing the whitespace will add it to the words array
+    // for correct char counts/offset calculation
+    for(var word, origLength, arLength=words.length, i=0; i < arLength; i++) {
       word = words[i];
-      if (/https?:\/\//.test(word)) { // if there isn't a http/s protocol.. we don't care
+      // if there isn't a http/s protocol.. we don't care
+      if (/https?:\/\//.test(word)) {
         origLength = word.length;
-        // remove punctuation at end of word (and break any URLs that DO end with such punctuation.)
-        if(/(\.|,|\?|!)$/.test(word)){
+        // remove punctuation at end of word
+        // (and break any URLs that DO end with such punctuation.)
+        if (/(\.|,|\?|!)$/.test(word)) {
           word = word.replace(/(\.|,|\?|!)+$/, '');
         }
-        // see if we have a <url>, (url) or [url] thingy going on, remove parens if we do
+        // see if we have a <url>, (url) or [url] thingy going on,
+        // remove parens if we do
         if (/^(\(|<|\[)/.test(word) && /(\)|>|\])$/.test(word)) {
-          offset+=1;
-          word = word.substr(1,word.length-2);
+          offset += 1;
+          word = word.substr(1, word.length-2);
         }
-        // Note: this did not handle (my site is: http://example.com) style parens.. 
+        // Note: this did not handle (my site is: http://example.com) style parens.
         if (word.indexOf(')') == word.length-1 && word.indexOf('(') == -1) {
           // For our sanity, let's assume parens in URLs will always match.
           // Naturally, they are under absolutely no requirement to do so..
           word = word.substr(0, word.length-1);
         }
-        // And here comes our funny DOM gymnastics to throw an A node inside a #TEXT node
+        // And here comes our funny DOM gymnastics to throw an A node
+        // inside a #TEXT node
         currentNode = currentNode.splitText(offset);
         var a = document.createElement('a');
         a.href = a.textContent = word;
         currentNode.parentElement.insertBefore(a, currentNode);
         currentNode = currentNode.splitText(word.length);
         currentNode.parentElement.removeChild(currentNode.previousSibling);
-        offset=0;
-        // oh wait. If any of the above cases chopped off a ) at the end of a URL, we're off by one now.. Or off by many, if there was punctuation.
-        if (origLength != word.length) {offset = origLength - word.length;}
+        offset = 0;
+        // oh wait. If any of the above cases chopped off a ) at the end of a
+        // URL, we're off by one now.. Or off by many, if there was punctuation.
+        if (origLength != word.length) {
+            offset = origLength - word.length;
+        }
       }else{
-        offset+=word.length;
+        offset += word.length;
       }
     }
   }
@@ -111,7 +125,7 @@
     getBugInfo(commentUrl, function() {
       var response = JSON.parse(this.responseText);
       var comments = response.comments;
-      // Loop from the bottom comment to the top, 
+      // Loop from the bottom comment to the top,
       // picking the last tag
       for (var i = comments.length - 1; i > 0; i--) {
         if (comments[i].tags && comments[i].tags.indexOf(tag) != -1) {
