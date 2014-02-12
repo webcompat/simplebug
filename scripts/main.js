@@ -37,18 +37,21 @@
   function addPreText(id, text, linkified) {
     var content;
     var desc = document.getElementById(id);
-    // let's avoid Mozilla lingo on simplebug..
-    text = text.replace(/B2G/g, 'Firefox OS').replace(/fennec/ig, 'Firefox for Android');
+    // let's avoid Mozilla lingo on simplebug.
+    text = text.replace(/b2g/ig, 'Firefox OS')
+               .replace(/fxos/ig, 'Firefox OS');
+               .replace(/fennec/ig, 'Firefox for Android')
     desc.innerHTML = "";
-    if (linkified){
+
+    if (linkified) {
       content = document.createElement("p");
       content.innerHTML = text;
-      } else {
+    } else {
       content = document.createElement("pre");
       text = document.createTextNode(text);
       content.appendChild(text);
       linkifyTextNode(content.firstChild);
-      }
+    }
     desc.appendChild(content);
   }
   function linkifyTextNode(textNode){ // if you try to use a regexp to match URLs, you have way more than two problems.. 
