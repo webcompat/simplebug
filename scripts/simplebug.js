@@ -29,11 +29,37 @@ var BugComments = Backbone.Model.extend({
     return url + this.get('bugID') + limit;
   },
   defaults: {
-    description: "Blah blah, this problem is blah blah blah etc.",
-    suggestedFix: "Here is how you should fix this."
+    description: "I am a default description.",
+    suggestedfix: "I am a default suggestedfix.",
+    description_ss: "This website is using server side user agent detection to determine if a user is browsing using a desktop or mobile client. Unfortunately the site is not properly detecting the user agent string for mobile Firefox browsers. This is causing Firefox mobile browsers to be redirected to the desktop version of the website rather than mobile.",
+    description_cs: "This website is using client side user agent detection to determine if a user is browsing using a desktop or mobile client. Unfortunately the site is not properly detecting the user agent string for mobile Firefox browsers. This is causing Firefox mobile browsers to be redirected to the desktop version of the website rather than mobile.",
+    suggestedfix_ss: "The recommended way to detect Firefox and other mobile browsers is by searching for the string “Mobi”. This can be implemented through custom code or through a library/framework. If it is through a library/framework you can check that it is up to date or reach out to the vendor for more information. Mozilla Developer Network has detailed <a href='https://developer.mozilla.org/en-US/docs/Browser_detection_using_the_user_agent#Mobile.2C_Tablet_or_Desktop'>information on user agent detection</a>.",
+    suggestedfix_cs: "The recommended way to detect Firefox and other mobile browsers is by searching for the string “Mobi”. Mozilla Developer Network has detailed <a href='https://developer.mozilla.org/en-US/docs/Browser_detection_using_the_user_agent#Mobile.2C_Tablet_or_Desktop'>information on user agent detection</a>."
   },
   parse: function(response, options) {
-    console.log(response);
+    this.getDescription(response);
+    this.getSuggestedFix(response);
+  },
+  getTaggedComment: function(tag, comments) {
+    for (var i = comments.length - 1; i > 0; i--) {
+      if (comments[i].tags && comments[i].tags.indexOf(tag) != -1) {
+        return [tag, comments[i].text];
+      }
+    }
+    // If we didn't find a tagged comment, return false.
+    return false;
+  },
+  getDescription: function(response){
+    // If any comment is tagged "description", use it. Otherwise,
+    // If first comment is tagged "simplebug_ignore", use default. Otherwise,
+    // If there is no first comment, use default. Otherwise,
+    // Use first comment
+    var descriptionTag = this.getTaggedComment("description", response.comments);
+    this.set(descriptionTag[0], descriptionTag[1]);
+  },
+  getSuggestedFix: function(response){
+    var tagged = this.getTaggedComment("suggestedfix", response.comments);
+    this.set(tagged[0], tagged[1]);
   }
 });
 
