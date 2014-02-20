@@ -1,4 +1,6 @@
-var BugInfo = Backbone.Model.extend({
+var simplebug = simplebug || {};
+
+simplebug.BugInfo = Backbone.Model.extend({
   urlRoot: function() {
     var url = "https://api-dev.bugzilla.mozilla.org/latest/bug/";
     var limit = "?include_fields=comments,url,summary,whiteboard,id";
@@ -22,7 +24,7 @@ var BugInfo = Backbone.Model.extend({
   }
 });
 
-var BugComments = Backbone.Model.extend({
+simplebug.BugComments = Backbone.Model.extend({
   urlRoot: function() {
     var url = "https://api-dev.bugzilla.mozilla.org/latest/bug/";
     var limit = "/comment";
@@ -63,7 +65,7 @@ var BugComments = Backbone.Model.extend({
   }
 });
 
-var HeaderView = Backbone.View.extend({
+simplebug.HeaderView = Backbone.View.extend({
   tagName: 'h1',
   template: _.template($('#header-tmpl').html()),
   render: function() {
@@ -72,7 +74,7 @@ var HeaderView = Backbone.View.extend({
   }
 });
 
-var URLView = Backbone.View.extend({
+simplebug.URLView = Backbone.View.extend({
   tagName: 'p',
   template: _.template($('#url-tmpl').html()),
   render: function() {
@@ -81,7 +83,7 @@ var URLView = Backbone.View.extend({
   }
 });
 
-var Description = Backbone.View.extend({
+simplebug.Description = Backbone.View.extend({
   tagName: 'pre',
   template: _.template($('#description-tmpl').html()),
   render: function() {
@@ -90,7 +92,7 @@ var Description = Backbone.View.extend({
   }
 });
 
-var SuggestedFix = Backbone.View.extend({
+simplebug.SuggestedFix = Backbone.View.extend({
   tagName: 'pre',
   template: _.template($('#suggestedfix-tmpl').html()),
   render: function() {
@@ -99,7 +101,7 @@ var SuggestedFix = Backbone.View.extend({
   }
 });
 
-var MoreInfo = Backbone.View.extend({
+simplebug.MoreInfo = Backbone.View.extend({
   tagName: 'p',
   template: _.template($('#information-tmpl').html()),
   render: function() {
@@ -108,22 +110,22 @@ var MoreInfo = Backbone.View.extend({
   }
 });
 
-var MainView = Backbone.View.extend({
+simplebug.MainView = Backbone.View.extend({
   el: $('#buginfo'),
   initialize: function() {
     $('#index').hide();
     // set up models
-    this.bugInfo = new BugInfo({bugID: this.options.bugID});
-    this.bugComments = new BugComments({bugID: this.options.bugID});
+    this.bugInfo = new simplebug.BugInfo({bugID: this.options.bugID});
+    this.bugComments = new simplebug.BugComments({bugID: this.options.bugID});
     this.initSubViews();
     this.fetchModels();
   },
   initSubViews: function() {
-    this.url = new URLView({model: this.bugInfo});
-    this.header = new HeaderView({model: this.bugInfo});
-    this.moreInfo = new MoreInfo({model: this.bugInfo});
-    this.desc = new Description({model: this.bugComments});
-    this.suggestedFix = new SuggestedFix({model: this.bugComments});
+    this.url = new simplebug.URLView({model: this.bugInfo});
+    this.header = new simplebug.HeaderView({model: this.bugInfo});
+    this.moreInfo = new simplebug.MoreInfo({model: this.bugInfo});
+    this.desc = new simplebug.Description({model: this.bugComments});
+    this.suggestedFix = new simplebug.SuggestedFix({model: this.bugComments});
   },
   fetchModels: function() {
     var self = this;
@@ -145,7 +147,7 @@ var MainView = Backbone.View.extend({
   }
 });
 
-var SimpleBug = Backbone.Router.extend({
+simplebug.Router = Backbone.Router.extend({
     routes: {
         "": "index",
         "moz/:id":  "showBug"
@@ -155,10 +157,10 @@ var SimpleBug = Backbone.Router.extend({
     showBug: function(id) {
       //need to validate id.
       document.title = "Web Compatibility Error Report for " + id;
-      this.mainView = new MainView({bugID: id});
+      this.mainView = new simplebug.MainView({bugID: id});
     }
 });
 //clean this up so it's not a ton of globals.
 /* Let's get this party started. */
-var router = new SimpleBug();
+var router = new simplebug.Router();
 Backbone.history.start();
