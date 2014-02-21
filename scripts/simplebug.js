@@ -113,6 +113,7 @@ simplebug.MoreInfo = Backbone.View.extend({
 simplebug.MainView = Backbone.View.extend({
   el: $('#buginfo'),
   initialize: function() {
+    $('#main-loader').show();
     $('#index').hide();
     // set up models
     this.bugInfo = new simplebug.BugInfo({bugID: this.options.bugID});
@@ -140,6 +141,7 @@ simplebug.MainView = Backbone.View.extend({
     this.bugComments.fetch().complete(function(){
       self.desc.setElement(self.$('#description')).render();
       self.suggestedFix.setElement(self.$('#suggestedfix')).render();
+      $('#main-loader').hide();
     }).error(function(){console.log("TODO: actual error handling >_>");});
   },
   render: function() {
@@ -153,7 +155,9 @@ simplebug.Router = Backbone.Router.extend({
         "moz/:id":  "showBug"
     },
     initialize: function () {},
-    index: function() { /* nothing for now */},
+    index: function() {
+      $('#main-loader').hide();
+    },
     showBug: function(id) {
       //need to validate id.
       document.title = "Web Compatibility Error Report for " + id;

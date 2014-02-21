@@ -55,7 +55,7 @@ article header {
     margin: 0;
     padding: 2em;
 }
-#basic p {
+#basic p, pre {
     line-height: 1.8em;
     font-family:"Helvetica Neue Light", Helvetica, sans-serif;
     padding: 0;
@@ -89,7 +89,6 @@ a.url:hover {
 }
 /* Description */
  #description {
-    font-family:"Andale Mono", "Courier New", Courier, monospace;
     line-height: 1.5em;
     margin-top: 2em;
     padding: 2em;
@@ -102,7 +101,6 @@ a.url:hover {
 }
 /* Fix */
  #suggestedfix {
-    font-family:"Andale Mono", "Courier New", Courier, monospace;
     line-height: 1.5em;
     margin-top: 2em;
     padding: 2em;
@@ -123,6 +121,14 @@ a.url:hover {
     background-image: url('../images/more-info.svg');
     background-position: 10px 10px;
     background-repeat: no-repeat;
+}
+#main-loader {
+    position:absolute;
+    left:50%;
+    top: 20%;
+    width:100px;
+    margin-left:-50px;
+    z-index:-1;"
 }
 footer {
     font-size: .95em;
