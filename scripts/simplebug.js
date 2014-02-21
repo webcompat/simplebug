@@ -15,6 +15,8 @@ simplebug.BugInfo = Backbone.Model.extend({
       a.href = url;
       return a.hostname;
     }
+    // stash whiteboard so BugComments model can peek at it
+    simplebug.whiteboard = response.whiteboard || "";
 
     this.set({
       bugID: response.id,
@@ -31,33 +33,54 @@ simplebug.BugComments = Backbone.Model.extend({
     return url + this.get('bugID') + limit;
   },
   defaults: {
-    description: "I am a default description.",
     suggestedfix: "I am a default suggestedfix.",
-    description_ss: "This website is using server side user agent detection to determine if a user is browsing using a desktop or mobile client. Unfortunately the site is not properly detecting the user agent string for mobile Firefox browsers. This is causing Firefox mobile browsers to be redirected to the desktop version of the website rather than mobile.",
-    description_cs: "This website is using client side user agent detection to determine if a user is browsing using a desktop or mobile client. Unfortunately the site is not properly detecting the user agent string for mobile Firefox browsers. This is causing Firefox mobile browsers to be redirected to the desktop version of the website rather than mobile.",
     suggestedfix_ss: "The recommended way to detect Firefox and other mobile browsers is by searching for the string “Mobi”. This can be implemented through custom code or through a library/framework. If it is through a library/framework you can check that it is up to date or reach out to the vendor for more information. Mozilla Developer Network has detailed <a href='https://developer.mozilla.org/en-US/docs/Browser_detection_using_the_user_agent#Mobile.2C_Tablet_or_Desktop'>information on user agent detection</a>.",
     suggestedfix_cs: "The recommended way to detect Firefox and other mobile browsers is by searching for the string “Mobi”. Mozilla Developer Network has detailed <a href='https://developer.mozilla.org/en-US/docs/Browser_detection_using_the_user_agent#Mobile.2C_Tablet_or_Desktop'>information on user agent detection</a>."
   },
+  description: function(type) {
+      var type = type || "server or client";
+      var copy = "This website is using " + type + " side user agent detection to determine if a user is browsing using a desktop or mobile client. Unfortunately the site is not properly detecting the user agent string for mobile Firefox browsers. This is causing Firefox mobile browsers to be redirected to the desktop version of the website rather than mobile."
+      return copy;
+  },
   parse: function(response, options) {
+    this.set("firstComment", response.comments[0].raw_text.trim());
     this.getDescription(response);
     this.getSuggestedFix(response);
   },
   getTaggedComment: function(tag, comments) {
-    for (var i = comments.length - 1; i > 0; i--) {
+    var result = false;
+    // loop from the bottom up. in case there are multiple results --
+    // we only want the latest one.
+    for (var i = comments.length - 1; i >= 0; i--) {
       if (comments[i].tags && comments[i].tags.indexOf(tag) != -1) {
-        return [tag, comments[i].text];
+        result = [tag, comments[i].text];
+        break;
       }
     }
-    // If we didn't find a tagged comment, return false.
-    return false;
+    // result is either a useful array, or `false`.
+    return result;
   },
-  getDescription: function(response){
-    // If any comment is tagged "description", use it. Otherwise,
-    // If first comment is tagged "simplebug_ignore", use default. Otherwise,
-    // If there is no first comment, use default. Otherwise,
-    // Use first comment
+  getDefaultDescription: function() {
+    if (simplebug.whiteboard && /(server|client)/.exec(simplebug.whiteboard)) {
+      return this.description(RegExp.$1);
+    }
+  },
+  getDescription: function(response) {
+    // if any comment is tagged "description", use it.
     var descriptionTag = this.getTaggedComment("description", response.comments);
-    this.set(descriptionTag[0], descriptionTag[1]);
+    if (descriptionTag) {
+      this.set(descriptionTag[0], descriptionTag[1]);
+    } else {
+      // if first comment is tagged "simplebug-ignore", use default.
+      // OR if the first comment is empty, use default.
+      var ignoreTag = this.getTaggedComment("simplebug-ignore", response.comments);
+      if (ignoreTag || this.get("firstComment") == "") {
+        this.set("description", this.getDefaultDescription());
+      } else {
+        // Use first comment (which is the description in the Bugzilla UI)
+        this.set("description", this.get("firstComment"));
+      }
+    }
   },
   getSuggestedFix: function(response){
     var tagged = this.getTaggedComment("suggestedfix", response.comments);
@@ -84,7 +107,6 @@ simplebug.URLView = Backbone.View.extend({
 });
 
 simplebug.Description = Backbone.View.extend({
-  tagName: 'pre',
   template: _.template($('#description-tmpl').html()),
   render: function() {
     this.$el.html(this.template(this.model.attributes));
@@ -93,7 +115,6 @@ simplebug.Description = Backbone.View.extend({
 });
 
 simplebug.SuggestedFix = Backbone.View.extend({
-  tagName: 'pre',
   template: _.template($('#suggestedfix-tmpl').html()),
   render: function() {
     this.$el.html(this.template(this.model.attributes));
@@ -134,15 +155,19 @@ simplebug.MainView = Backbone.View.extend({
       self.url.setElement(self.$('#url')).render();
       self.header.setElement(self.$('.general')).render();
       self.moreInfo.setElement(self.$('#information')).render();
-      // render() the MainView since we have at least the basic info.
-      self.render();
+      self.bugComments.fetch().complete(function(){
+        self.desc.setElement(self.$('#description')).render();
+        self.suggestedFix.setElement(self.$('#suggestedfix')).render();
+        $('#main-loader').hide();
+        // render() the MainView.
+        // Note, we can move this up above this fetch() if we want to show
+        // the explanation before we add in the description and suggestedfix
+        // That makes the page feel faster, maybe.
+        self.render();
+      }).error(function(){console.log("TODO: actual error handling >_>");});
     }).error(function(){console.log("TODO: actual error handling >_>");});
 
-    this.bugComments.fetch().complete(function(){
-      self.desc.setElement(self.$('#description')).render();
-      self.suggestedFix.setElement(self.$('#suggestedfix')).render();
-      $('#main-loader').hide();
-    }).error(function(){console.log("TODO: actual error handling >_>");});
+
   },
   render: function() {
     this.$el.show();
