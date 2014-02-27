@@ -33,9 +33,7 @@ simplebug.BugComments = Backbone.Model.extend({
     return url + this.get('bugID') + limit;
   },
   defaults: {
-    suggestedfix: "I am a default suggestedfix.",
-    suggestedfix_ss: "The recommended way to detect Firefox and other mobile browsers is by searching for the string “Mobi”. This can be implemented through custom code or through a library/framework. If it is through a library/framework you can check that it is up to date or reach out to the vendor for more information. Mozilla Developer Network has detailed <a href='https://developer.mozilla.org/en-US/docs/Browser_detection_using_the_user_agent#Mobile.2C_Tablet_or_Desktop'>information on user agent detection</a>.",
-    suggestedfix_cs: "The recommended way to detect Firefox and other mobile browsers is by searching for the string “Mobi”. Mozilla Developer Network has detailed <a href='https://developer.mozilla.org/en-US/docs/Browser_detection_using_the_user_agent#Mobile.2C_Tablet_or_Desktop'>information on user agent detection</a>."
+    suggestedfix: "The recommended way to detect Firefox and other mobile browsers is by searching for the string “Mobi”. This can be implemented through custom code or through a library/framework. If it is through a library/framework you can check that it is up to date or reach out to the vendor for more information. Mozilla Developer Network has detailed <a href='https://developer.mozilla.org/en-US/docs/Browser_detection_using_the_user_agent#Mobile.2C_Tablet_or_Desktop'>information on user agent detection</a>."
   },
   description: function(type) {
       var type = type || "server or client";
@@ -83,8 +81,10 @@ simplebug.BugComments = Backbone.Model.extend({
     }
   },
   getSuggestedFix: function(response){
-    var tagged = this.getTaggedComment("suggestedfix", response.comments);
-    this.set(tagged[0], tagged[1]);
+    var suggestedfixTag = this.getTaggedComment("suggestedfix", response.comments);
+    if (suggestedfixTag) {
+        this.set(suggestedfixTag[0], suggestedfixTag[1]);
+    } // otherwise it will use defaults.suggestedfix
   }
 });
 
