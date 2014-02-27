@@ -180,8 +180,6 @@ simplebug.MainView = Backbone.View.extend({
         self.render();
       }).error(function(){console.log("TODO: actual error handling >_>");});
     }).error(function(){$('#error').show();});
-
-
   },
   render: function() {
     this.$el.fadeIn();
@@ -210,8 +208,7 @@ simplebug.Router = Backbone.Router.extend({
       this.mainView = new simplebug.MainView({bugID: id});
     }
 });
-//clean this up so it's not a ton of globals.
 /* Let's get this party started. */
 jQuery.ajaxSetup({timeout: 7500});
-var router = new simplebug.Router();
+new simplebug.Router();
 Backbone.history.start();
