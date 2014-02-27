@@ -147,12 +147,12 @@ simplebug.MoreInfo = Backbone.View.extend({
 
 simplebug.MainView = Backbone.View.extend({
   el: $('#buginfo'),
-  initialize: function() {
+  initialize: function(opts) {
     $('#main-loader').show();
     $('#index').hide();
     // set up models
-    this.bugInfo = new simplebug.BugInfo({bugID: this.options.bugID});
-    this.bugComments = new simplebug.BugComments({bugID: this.options.bugID});
+    this.bugInfo = new simplebug.BugInfo({bugID: opts.bugID});
+    this.bugComments = new simplebug.BugComments({bugID: opts.bugID});
     this.initSubViews();
     this.fetchModels();
   },
