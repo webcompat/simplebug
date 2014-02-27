@@ -165,26 +165,26 @@ simplebug.MainView = Backbone.View.extend({
   },
   fetchModels: function() {
     var self = this;
-    this.bugInfo.fetch().complete(function(){
+    this.bugInfo.fetch().success(function(){
       self.url.setElement(self.$('#url')).render();
       self.header.setElement(self.$('.general')).render();
       self.moreInfo.setElement(self.$('#information')).render();
-      self.bugComments.fetch().complete(function(){
+      self.bugComments.fetch().success(function(){
         self.desc.setElement(self.$('#description')).render();
         self.suggestedFix.setElement(self.$('#suggestedfix')).render();
-        $('#main-loader').hide();
+        $('#main-loader, #error').fadeOut(300);
         // render() the MainView.
         // Note, we can move this up above this fetch() if we want to show
         // the explanation before we add in the description and suggestedfix
         // That makes the page feel faster, maybe.
         self.render();
       }).error(function(){console.log("TODO: actual error handling >_>");});
-    }).error(function(){console.log("TODO: actual error handling >_>");});
+    }).error(function(){$('#error').show();});
 
 
   },
   render: function() {
-    this.$el.show();
+    this.$el.fadeIn();
   }
 });
 
@@ -205,5 +205,6 @@ simplebug.Router = Backbone.Router.extend({
 });
 //clean this up so it's not a ton of globals.
 /* Let's get this party started. */
+jQuery.ajaxSetup({timeout: 7500});
 var router = new simplebug.Router();
 Backbone.history.start();
