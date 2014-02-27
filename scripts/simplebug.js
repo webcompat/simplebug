@@ -190,11 +190,18 @@ simplebug.MainView = Backbone.View.extend({
 
 simplebug.Router = Backbone.Router.extend({
     routes: {
-        "": "index",
-        "mozilla/:id":  "showBug"
+        "mozilla/:id":  "showBug",
+        "*catchall": "index",
     },
     initialize: function () {},
     index: function() {
+      // backwards compatibility with early version of simplebug
+      // that only used a single id get param.
+      var oldParam;
+      if (oldParam = location.href.match(/\?id=(\d+)/)) {
+        if (history.replaceState) history.replaceState({}, "", "index.html");
+        this.navigate("mozilla/" + oldParam[1], {trigger: true});
+      }
       $('#main-loader').hide();
     },
     showBug: function(id) {
