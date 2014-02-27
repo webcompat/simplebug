@@ -36,8 +36,8 @@ simplebug.BugComments = Backbone.Model.extend({
     suggestedfix: "The recommended way to detect Firefox and other mobile browsers is by searching for the string “Mobi”. This can be implemented through custom code or through a library/framework. If it is through a library/framework you can check that it is up to date or reach out to the vendor for more information. Mozilla Developer Network has detailed <a href='https://developer.mozilla.org/en-US/docs/Browser_detection_using_the_user_agent#Mobile.2C_Tablet_or_Desktop'>information on user agent detection</a>."
   },
   description: function(type) {
-      var type = type || "server or client";
-      var copy = "This website is using " + type + " side user agent detection to determine if a user is browsing using a desktop or mobile client. Unfortunately the site is not properly detecting the user agent string for mobile Firefox browsers. This is causing Firefox mobile browsers to be redirected to the desktop version of the website rather than mobile."
+      type = type || "server or client";
+      var copy = "This website is using " + type + " side user agent detection to determine if a user is browsing using a desktop or mobile client. Unfortunately the site is not properly detecting the user agent string for mobile Firefox browsers. This is causing Firefox mobile browsers to be redirected to the desktop version of the website rather than mobile.";
       return copy;
   },
   parse: function(response, options) {
@@ -86,7 +86,7 @@ simplebug.BugComments = Backbone.Model.extend({
       // if first comment is tagged "simplebug-ignore", use default.
       // OR if the first comment is empty, use default.
       var ignoreTag = this.getTaggedComment("simplebug-ignore", response.comments);
-      if (ignoreTag || this.get("firstComment") == "") {
+      if (ignoreTag || this.get("firstComment") === "") {
         this.set("description", this.getDefaultDescription());
       } else {
         // Use first comment (which is the description in the Bugzilla UI)
