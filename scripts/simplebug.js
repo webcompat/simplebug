@@ -41,9 +41,23 @@ simplebug.BugComments = Backbone.Model.extend({
       return copy;
   },
   parse: function(response, options) {
+    this.sanitize(response.comments);
     this.set("firstComment", response.comments[0].raw_text.trim());
     this.getDescription(response);
     this.getSuggestedFix(response);
+  },
+  sanitize: function(commentsArray) {
+    if (!$.isArray(commentsArray)) {
+        return;
+    }
+    // clean up any codenames that make little sense to the outside world
+    // this may need to be smarter in the future (i.e., ignore text found in
+    // code ticks `device.fxos`, etc).
+    $.each(commentsArray, function(index, item) {
+        item.raw_text = item.raw_text.replace(/b2g/ig, 'Firefox OS')
+                                     .replace(/fxos/ig, 'Firefox OS')
+                                     .replace(/fennec/ig, 'Firefox for Android');
+    });
   },
   getTaggedComment: function(tag, comments) {
     var result = false;
@@ -51,7 +65,7 @@ simplebug.BugComments = Backbone.Model.extend({
     // we only want the latest one.
     for (var i = comments.length - 1; i >= 0; i--) {
       if (comments[i].tags && comments[i].tags.indexOf(tag) != -1) {
-        result = [tag, comments[i].text];
+        result = [tag, comments[i].raw_text];
         break;
       }
     }
