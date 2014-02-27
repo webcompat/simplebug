@@ -19,7 +19,7 @@ simplebug.BugInfo = Backbone.Model.extend({
     simplebug.whiteboard = response.whiteboard || "";
 
     this.set({
-      bugID: response.id,
+      bugID:  response.id,
       url:    response.url,
       domain: getDomain(response.url)
     });
@@ -177,7 +177,7 @@ simplebug.MainView = Backbone.View.extend({
 simplebug.Router = Backbone.Router.extend({
     routes: {
         "": "index",
-        "moz/:id":  "showBug"
+        "mozilla/:id":  "showBug"
     },
     initialize: function () {},
     index: function() {
