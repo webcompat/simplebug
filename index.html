@@ -1,30 +1,69 @@
-<!DOCTYPE html>
-<title>simplebug</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="style/basic.css">
-
-<header class="general">Web Compatibility Error Report for <span class="domain"></span></header>
-<article>
-  <section id="basic">
-  <!-- Basic Intro Boilerplate -->
-  <p>Users have reported a <strong>problem with your website</strong> not working properly for <a href="http://www.mozilla.org/">Mozilla</a> Firefox Browsers. You may be <strong>able to help</strong>. If you know someone, potentially in the Communications, Marketing or Technology departments, please pass along this information.</p>
-
-  <p>The technical description of the problem and a suggested fix are provided below. A volunteer or an employee will help through the process of fixing the issue.</p>
-  <p id="url"><span class="url_label">URL</span> <a class="url"></a></p>
-  </section>
-  <section id="description">
-    <img class="loader" src="images/loader.gif">
-  </section>
-  <section id="suggestedfix">
-    <img class="loader" src="images/loader.gif">
-  </section>
-  <section id="information" title="more information">
-    <img class="loader" src="images/loader.gif">
-  </section>
-</article>
-
-<footer>
-	<p>Initiative started by Mozilla. Want to join?</p>
-</footer>
-<script src="scripts/main.js"></script>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style/basic.css">
+  <title>No More Web Compatibility Issues</title>
+</head>
+<body>
+<div id="index">
+  <header class="general">No More Web Compatibility Issues</header>
+  <article>
+    <section class="intro">
+      <p>One of your Web site users can not access or has a bad experience on your Web site. Someone took the time to fill a report to explain, analyze and sometimes suggest how to fix it. Often the bug reporting system at browser vendors can be confusing or overwhelming, we created a simpler interface with the information you need for communicating inside your company.</p>
+      <p>The goal is to make your Web site reachable and usable by a bigger number of users. We can help.</p>
+    </section>
+    <section class="contact">
+      <p>If you are still confused by this site or have difficulties to understand its content, you can reach out to us <a href="http://twitter.com/MozWebCompat">@MozWebCompat</a>.</p>
+    </section>
+    <footer>
+      <p>This Web site has been created by the <a href="http://webcompat.com/">Web Compatibility</a> work in 2014. This effort has been initiated by <a href="https://wiki.mozilla.org/Compatibility/Mobile#People">Mozilla Web Compatibility community</a>.</p>
+    </footer>
+  </article>
+</div>
+<img src="images/main-loader.gif" id="main-loader">
+<div id="buginfo">
+  <header class="general">
+    <script type="text/template" id="header-tmpl">
+      Web Compatibility Error Report for <span class="domain"><%= domain %></span>
+    </script>
+  </header>
+  <article>
+    <section id="basic">
+    <!-- Basic Intro Boilerplate -->
+    <p>Users have reported a <strong>problem with your website</strong> not working properly for <a href="http://www.mozilla.org/">Mozilla</a> Firefox Browsers. You may be <strong>able to help</strong>. If you know someone, potentially in the Communications, Marketing or Technology departments, please pass along this information.</p>
+    <p>The technical description of the problem and a suggested fix are provided below. A volunteer or an employee will help through the process of fixing the issue.</p>
+    <p id="url">
+      <script type="text/template" id="url-tmpl">
+        <span class="url_label">URL</span> <a class="url" href="<%= url %>"><%= url %></a>
+      </script>
+    </p>
+    </section>
+    <section id="description">
+      <img class="loader" src="images/loader.gif">
+      <script type="text/template" id="description-tmpl">
+        <pre><%= description %></pre>
+      </script>
+    </section>
+    <section id="suggestedfix">
+      <img class="loader" src="images/loader.gif">
+      <script type="text/template" id="suggestedfix-tmpl">
+        <pre><%= suggestedfix %></pre>
+      </script>
+    </section>
+    <section id="information" title="more information">
+      <img class="loader" src="images/loader.gif">
+      <script type="text/template" id="information-tmpl">
+        Comment on the <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=<%= bugID %>">bug</a>.
+      </script>
+    </section>
+  </article>
+  </div>
+  <div id="error">The site is either very slow or something is not working right now :'(. Please try again later.</div>
+  <script src="scripts/jquery-1.11.0.min.js"></script>
+  <script src="scripts/underscore-min.js"></script>
+  <script src="scripts/backbone-min.js"></script>
+  <script src="scripts/simplebug.js"></script>
+</body>
+</html>
