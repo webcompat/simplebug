@@ -22,7 +22,7 @@ simplebug.BugInfo = Backbone.Model.extend({
     this.set({
       bugID:  response.id,
       url:    response.url,
-      domain: getDomain(response.url),
+      domain: getDomain(response.url)
     });
   }
 });
