@@ -17,11 +17,12 @@ simplebug.BugInfo = Backbone.Model.extend({
     }
     // stash whiteboard so BugComments model can peek at it
     simplebug.whiteboard = response.whiteboard || "";
+    simplebug.summary = response.summary || "";
 
     this.set({
       bugID:  response.id,
       url:    response.url,
-      domain: getDomain(response.url)
+      domain: getDomain(response.url),
     });
   }
 });
@@ -45,7 +46,7 @@ simplebug.BugComments = Backbone.Model.extend({
     this.set("firstComment", response.comments[0].raw_text.trim());
     this.getDescription(response);
     this.getSuggestedFix(response);
-    this.set("summary", response.summary);
+    this.set("summary", simplebug.summary);
   },
   sanitize: function(commentsArray) {
     if (!$.isArray(commentsArray)) {
