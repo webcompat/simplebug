@@ -45,6 +45,7 @@ simplebug.BugComments = Backbone.Model.extend({
     this.set("firstComment", response.comments[0].raw_text.trim());
     this.getDescription(response);
     this.getSuggestedFix(response);
+    this.set("summary", response.summary);
   },
   sanitize: function(commentsArray) {
     if (!$.isArray(commentsArray)) {
