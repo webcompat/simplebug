@@ -15,8 +15,9 @@ simplebug.BugInfo = Backbone.Model.extend({
       a.href = url;
       return a.hostname;
     }
-    // stash whiteboard so BugComments model can peek at it
+    // stash whiteboard and summary so BugComments model can peek at it
     simplebug.whiteboard = response.whiteboard || "";
+    simplebug.summary = response.summary || "";
 
     this.set({
       bugID:  response.id,
@@ -45,6 +46,7 @@ simplebug.BugComments = Backbone.Model.extend({
     this.set("firstComment", response.comments[0].raw_text.trim());
     this.getDescription(response);
     this.getSuggestedFix(response);
+    this.set("summary", simplebug.summary);
   },
   sanitize: function(commentsArray) {
     if (!$.isArray(commentsArray)) {
