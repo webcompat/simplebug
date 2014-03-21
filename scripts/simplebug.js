@@ -15,7 +15,7 @@ simplebug.BugInfo = Backbone.Model.extend({
       a.href = url;
       return a.hostname;
     }
-    // stash whiteboard so BugComments model can peek at it
+    // stash whiteboard and summary so BugComments model can peek at it
     simplebug.whiteboard = response.whiteboard || "";
     simplebug.summary = response.summary || "";
 
