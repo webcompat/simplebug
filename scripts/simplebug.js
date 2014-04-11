@@ -46,19 +46,24 @@ simplebug.BugComments = Backbone.Model.extend({
     this.set("firstComment", response.comments[0].raw_text.trim());
     this.getDescription(response);
     this.getSuggestedFix(response);
-    this.set("summary", _.escape(simplebug.summary));
+    this.set("summary", this.sanitize(simplebug.summary));
   },
   sanitize: function(commentsArray) {
-    if (!$.isArray(commentsArray)) {
-        return;
-    }
     // clean up any codenames that make little sense to the outside world
-    // this may need to be smarter in the future (i.e., ignore text found in
-    // code ticks `device.fxos`, etc).
+    // Also escape text to be HTML safe.
+    function replaceCodewords(string) {
+      return _.escape(string.replace(/b2g/ig, 'Firefox OS')
+                            .replace(/fxos/ig, 'Firefox OS')
+                            .replace(/fennec/ig, 'Firefox for Android'));
+    }
+
+    if (!$.isArray(commentsArray) && typeof commentsArray == "string") {
+        // it's the summary, so replace junk and return.
+        return replaceCodewords(commentsArray);
+    }
+
     $.each(commentsArray, function(index, item) {
-        item.raw_text = _.escape(item.raw_text.replace(/b2g/ig, 'Firefox OS')
-                                              .replace(/fxos/ig, 'Firefox OS')
-                                              .replace(/fennec/ig, 'Firefox for Android'));
+      item.raw_text = replaceCodewords(item.raw_text);
     });
   },
   getTaggedComment: function(tag, comments) {
