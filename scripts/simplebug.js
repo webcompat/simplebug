@@ -7,13 +7,18 @@ simplebug.BugInfo = Backbone.Model.extend({
     return url + this.get('bugID') + limit;
   },
   defaults: {
-    domain: "http://www.example.com"
+    domain: "your site."
   },
   parse: function(response, options) {
+    var defaultDomain = this.defaults.domain;
     function getDomain(url) {
-      var a = document.createElement('a');
-      a.href = url;
-      return a.hostname;
+      if (url) {
+        var a = document.createElement('a');
+        a.href = url;
+        return a.hostname
+      } else {
+        return defaultDomain;
+      }
     }
     // stash whiteboard and summary so BugComments model can peek at it
     simplebug.whiteboard = response.whiteboard || "";
