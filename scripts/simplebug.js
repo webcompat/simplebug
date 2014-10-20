@@ -2,7 +2,7 @@ var simplebug = simplebug || {};
 
 simplebug.BugInfo = Backbone.Model.extend({
   urlRoot: function() {
-    var url = "https://api-dev.bugzilla.mozilla.org/latest/bug/";
+    var url = "https://bugzilla.mozilla.org/rest/bug/";
     var limit = "?include_fields=comments,url,summary,whiteboard,id";
     return url + this.get('bugID') + limit;
   },
@@ -10,6 +10,7 @@ simplebug.BugInfo = Backbone.Model.extend({
     domain: "your site."
   },
   parse: function(response, options) {
+    var response = response.bugs[0];
     var defaultDomain = this.defaults.domain;
     function getDomain(url) {
       if (url) {
@@ -34,7 +35,7 @@ simplebug.BugInfo = Backbone.Model.extend({
 
 simplebug.BugComments = Backbone.Model.extend({
   urlRoot: function() {
-    var url = "https://api-dev.bugzilla.mozilla.org/latest/bug/";
+    var url = "https://bugzilla.mozilla.org/rest/bug/";
     var limit = "/comment";
     return url + this.get('bugID') + limit;
   },
@@ -46,7 +47,11 @@ simplebug.BugComments = Backbone.Model.extend({
       var copy = "This website is using " + type + " side user agent detection to determine if a user is browsing using a desktop or mobile client. Unfortunately the site is not properly detecting the user agent string for mobile Firefox browsers. This is causing Firefox mobile browsers to be redirected to the desktop version of the website rather than mobile.";
       return copy;
   },
+  initialize: function(options) {
+    this.bugID = options.bugID;
+  },
   parse: function(response, options) {
+    var response = response.bugs[this.bugID];
     this.sanitize(response.comments);
     this.set("firstComment", response.comments[0].raw_text.trim());
     this.getDescription(response);
